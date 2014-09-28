@@ -37,7 +37,7 @@ type Points struct {
 }
 
 type meta struct {
-	LastGift time.Time
+	LastGifting time.Time
 }
 
 var log = logging.MustGetLogger("tenykspoints")
@@ -64,6 +64,54 @@ func AddRegexFilters() {
 func IncomingHandler(data []byte) {
 	// IncomingHandler will regex data to see if it fits the mold
 	// returns fucking nothing
+
+	vetted_msg := string(data)
+	MeatAndPotatos(vetted_msg)
+}
+
+func NewRedisConn(conf *Config) *redis.Conn {
+	addr := fmt.Sprintf("%s:%d", conf.Redis.Host, conf.Redis.Port)
+	red, err := redis.Dial("tcp", addr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return red
+}
+
+// During the Russian revolution, capitalist soldiers would smoke cigaretes
+// on the front lines and in the trenches. HyperLoopLoop was born out of that
+// store.
+func HyperLoopLoop(conf *Config) {
+	go func () {
+		pubsub := redis.PubSubConn{NewRedisConn(conf)}
+		pubsub.Subscribe(ServicesChannel)
+		for {
+			switch msg := pubsub.Recieve().(type) {
+				case redis.Message:
+					DataIn <- msg.Data
+			}
+		}
+	}()
+
+	dataoutdawglikeBURSTMODE := func(msg string) {
+		red := NewRedisConn(conf)
+		defer red.Close()
+		red.Do("PUBLISH", TenyksChannel, msg)
+	}
+
+	go func(){
+		for {
+			select {
+			case msg := <-DataOut:
+				dataoutdawglikeBURSTMODE(msg)
+			}
+		}
+	}()
+}
+
+func MeatAndPotatos(msg string) {
+
 }
 
 func main() {
@@ -80,6 +128,7 @@ func main() {
 	err = json.Unmarshal(input, &conf)
 
 	go GiftTimer()
+	go HyperLoopLoop()
 
 	for {
 		select {
