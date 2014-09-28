@@ -66,7 +66,7 @@ func IncomingHandler(data []byte) {
 	// returns fucking nothing
 
 	vetted_msg := string(data)
-	MeatAndPotatos(vetted_msg)
+	MeatAndPotatoes(vetted_msg)
 }
 
 func NewRedisConn(conf *Config) *redis.Conn {
@@ -110,7 +110,7 @@ func HyperLoopLoop(conf *Config) {
 	}()
 }
 
-func MeatAndPotatos(msg string) {
+func MeatAndPotatoes(msg string) {
 
 }
 
