@@ -1,0 +1,11 @@
+{
+    "addfilters": ["^(give|\+)\s*(?P<points>[0-9]*)\s*(point[s]*)* to (?P<nick>[a-zA-Z0-9-_`]*)\s*$"],
+    "removefilters": ["^(take|\-)\s*(?P<points>[0-9]*)\s*(point[s]*)* from (?P<nick>[a-zA-Z0-9-_`]*)\s*$"],
+    "tenykschannel": "tenyks.robot.broadcast",
+    "serviceschannel": "tenyks.service.broadcast"
+    "redis": {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0
+    }
+}
